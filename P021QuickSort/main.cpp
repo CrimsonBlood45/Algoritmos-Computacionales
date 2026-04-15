@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstdlib>
 
 using namespace std;
 
@@ -187,8 +188,10 @@ void quickSortRecursive(int arr[], int low, int high) {
         quickSortRecursive(arr, pi + 1, high);
     }
 }
-int partition(int arr[], int low, int high) {
-    int pivot = arr[high]; // pivote
+int partition(int arr[], int low, int high){
+    int alepivot = low + rand() % (high - low + 1);
+    swap(arr[alepivot], arr[high]);
+    int pivot = arr[high];
     int i = low - 1;
 
     for (int j = low; j < high; j++) {

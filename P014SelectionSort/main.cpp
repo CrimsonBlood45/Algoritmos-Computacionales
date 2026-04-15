@@ -20,7 +20,7 @@ bool tieneExtensionTxt(string nombre);
 void selectSort(struct arreglos *arreglo);
 void displayArray(struct arreglos *arreglo);
 void recordFile(struct arreglos *arreglo);
-bool validAction(int opt, struct arreglos *arreglo);
+bool validAction(int opt, arreglos *arreglo);
 
 struct arreglos{
     int size = 0;
