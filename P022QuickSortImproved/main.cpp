@@ -189,6 +189,8 @@ void quickSortRecursive(int arr[], int low, int high) {
     }
 }
 int partition(int arr[], int low, int high){
+    int randpivot = low + rand() % (high - low + 1);
+    swap(arr[randpivot], arr[high]);
     int pivot = arr[high];
     int i = low - 1;
 
