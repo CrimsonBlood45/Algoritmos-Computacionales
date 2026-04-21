@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <chrono>
 
 using namespace std;
 
@@ -120,6 +121,7 @@ bool tieneExtensionTxt(string nombre){
     return sufijo == ext;
 }
 void selectSort(struct arreglos *arreglo){
+    auto start = std::chrono::high_resolution_clock::now();
     int minIndex, temp;
     for(int i = 0; i < arreglo->size; i++){
         minIndex = i;
@@ -132,7 +134,9 @@ void selectSort(struct arreglos *arreglo){
         }
     }
     arreglo->sorted = true;
-    cout << "\tArreglo Ordenado\n\n";
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    cout << "\tArreglo Ordenado en " << duration.count()/1000000.0 << " segundos\n\n";
 }
 void displayArray(struct arreglos *arreglo){
     cout << "Arreglo Actual: ";

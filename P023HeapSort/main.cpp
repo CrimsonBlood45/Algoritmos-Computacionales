@@ -19,13 +19,12 @@ using namespace std;
 
 void leerArchivo        (struct arreglos *arreglo);
 bool tieneExtensionTxt  (string nombre);
-void quickSort          (struct arreglos *arreglo);
+void sort               (struct arreglos *arreglo);
+void heapSort           (int arr[], int n);
+void heapify            (int arr[], int n, int i);
 void displayArray       (struct arreglos *arreglo);
 void recordFile         (struct arreglos *arreglo);
 bool validAction        (int opt, struct arreglos *arreglo);
-void quickSortRecursive (int arr[], int low, int high);
-int  partition          (int arr[], int low, int high);
-void swap               (int &a, int &b);
 
 struct arreglos{
     int size = 0;
@@ -55,7 +54,7 @@ int main(){
         if(!validAction(opt, &arreglo1)) continue;
         switch(opt){
             case 1: leerArchivo(&arreglo1); break;
-            case 2: quickSort(&arreglo1); break;
+            case 2: sort(&arreglo1); break;
             case 3: recordFile(&arreglo1); break;
             case 4: displayArray(&arreglo1); break;
             case 5: return 0;
@@ -124,14 +123,9 @@ bool tieneExtensionTxt(string nombre){
  
     return sufijo == ext;
 }
-void quickSort(struct arreglos *arreglo){
+void sort(struct arreglos *arreglo){
     auto start = std::chrono::high_resolution_clock::now();
-    if (!arreglo->check(arreglo->isEmpty(), "Error: Arreglo vacio\n")) return;
-    if (!arreglo->check(arreglo->sorted, "El arreglo ya esta ordenado\n")) return;
-
-    // Llamada a QuickSort
-    quickSortRecursive(arreglo->elems, 0, arreglo->size - 1);
-
+    heapSort(arreglo->elems, arreglo->size);
     arreglo->sorted = true;
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
@@ -184,30 +178,27 @@ bool validAction(int opt, arreglos *arreglo) {
         default: cout << "Opción Inválida. Intente de Nuevo... \n"; return false;
     }
 }
-void quickSortRecursive(int arr[], int low, int high) {
-    if (low < high) {
-        int pi = partition(arr, low, high);
-
-        quickSortRecursive(arr, low, pi - 1);
-        quickSortRecursive(arr, pi + 1, high);
+void heapSort(int arr[], int n) {
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(arr, n, i);
+    for (int i = n - 1; i > 0; i--) {
+        swap(arr[0], arr[i]);
+        heapify(arr, i, 0);
     }
 }
-int partition(int arr[], int low, int high){
-    int pivot = arr[high];
-    int i = low - 1;
+void heapify(int arr[], int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
 
-    for (int j = low; j < high; j++) {
-        if (arr[j] < pivot) {
-            i++;
-            swap(arr[i], arr[j]);
-        }
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
     }
-
-    swap(arr[i + 1], arr[high]);
-    return i + 1;
-}
-void swap(int &a, int &b) {
-    int temp = a;
-    a = b;
-    b = temp;
 }

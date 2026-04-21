@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <locale>
+#include <chrono>
 
 #define readErr         "   [!] No se puede leer. Ya se leyó un archivo\n"
 #define sortErr         "   [!] No se puede ordenar. El arreglo ya fue ordenado\n"
@@ -125,6 +126,7 @@ bool tieneExtensionTxt(string nombre){
     return sufijo == ext;
 }
 void insertSort(struct arreglos *arreglo){
+    auto start = std::chrono::high_resolution_clock::now();
     for (int i = 1; i < arreglo->size; ++i) {
         int key = arreglo->elems[i];
         int j = i - 1;
@@ -136,7 +138,9 @@ void insertSort(struct arreglos *arreglo){
         arreglo->elems[j + 1] = key;
     }
     arreglo->sorted = true;
-    cout << "Arreglo Ordenado Exitósamente\n";
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    cout << "\tArreglo Ordenado en " << duration.count()/1000000.0 << " segundos\n\n";
 }
 void recordFile(struct arreglos *arreglo){
     string nombre;

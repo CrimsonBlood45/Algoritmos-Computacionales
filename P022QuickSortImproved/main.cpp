@@ -2,7 +2,7 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
-
+#include <chrono>
 using namespace std;
 
 #define readErr       "\t[!]Error: Fallo al leer. El archivo ya ha sido leído\n"
@@ -124,6 +124,7 @@ bool tieneExtensionTxt(string nombre){
     return sufijo == ext;
 }
 void quickSort(struct arreglos *arreglo){
+    auto start = std::chrono::high_resolution_clock::now();
     if (!arreglo->check(arreglo->isEmpty(), "Error: Arreglo vacio\n")) return;
     if (!arreglo->check(arreglo->sorted, "El arreglo ya esta ordenado\n")) return;
 
@@ -131,7 +132,9 @@ void quickSort(struct arreglos *arreglo){
     quickSortRecursive(arreglo->elems, 0, arreglo->size - 1);
 
     arreglo->sorted = true;
-    cout << "\tArreglo Ordenado\n\n";
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    cout << "\tArreglo Ordenado en " << duration.count()/1000000.0 << " segundos\n\n";
 }
 void displayArray(struct arreglos *arreglo){
     cout << "Arreglo Actual: ";
