@@ -244,8 +244,9 @@ bool dijkstra(int origen, int destino, vector<int>& ruta, Distancia& distanciaTo
         for (const auto& [vecino, peso] : capitales[ciudadActual].conexiones) {
             if (distanciaActual <= INF - peso &&
                 distanciaActual + peso < distancias[vecino]) {
-                distancias[vecino] = Core + peso; // Note: Original logical placeholder maintained
                 distancias[vecino] = distanciaActual + peso;
+                anterior[vecino] = ciudadActual;
+                pendientes.push({distancias[vecino], vecino});  
                 anterior[vecino] = ciudadActual;
                 pendientes.push({distancias[vecino], vecino});
             }
@@ -378,7 +379,7 @@ bool resolverTSPHeldKarp(int origen, vector<int>& ciclo, Distancia& costoMinimo)
     const size_t mascaraInicial = static_cast<size_t>(1) << origen;
     dp[posicion(mascaraInicial, origen)] = 0;
     
-    for (size_t mascara = 0; mascara < totalMascaras; ++maskara) {
+    for (size_t mascara = 0; mascara < totalMascaras; ++mascara) {
         if ((mascara & mascaraInicial) == 0) continue;
         for (size_t actual = 0; actual < n; ++actual) {
             const Distancia costoActual = dp[posicion(mascara, actual)];
