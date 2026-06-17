@@ -44,22 +44,24 @@ struct arreglos{
     bool read           = 0, sortedAsc = 0, sortedDesc = 0, recorded = 0, sortAsc = 0;
     bool isEmpty()      {return elems == nullptr || size == 0; }
     bool check          (bool condicion, const char* mensaje);
-    bool binarySearch   (int left, int right, int searchValue);
+    bool binarySearch   (int left, int right, int searchValue, bool asc);
 };
 bool arreglos::check(bool condicion, const char* mensaje){
     if (condicion) cout << mensaje;
     return !condicion;
 }
-bool arreglos::binarySearch(int left, int right, int searchValue){
+bool arreglos::binarySearch(int left, int right, int searchValue, bool asc){
     i++;
     if(right >= left){
         mid = left + (right-left)/2;
         if(elems[mid] == searchValue) return true;
-        else if(elems[mid] > searchValue) return binarySearch(left, mid - 1, searchValue);
-        else return binarySearch(mid + 1, right, searchValue);
-    }
-    if(elems[mid] == searchValue){
-        cout << "";
+        if(asc){
+            if(elems[mid] > searchValue) return binarySearch(left, mid - 1, searchValue, asc);
+            else                         return binarySearch(mid + 1, right, searchValue, asc);
+        } else {
+            if(elems[mid] > searchValue) return binarySearch(mid + 1, right, searchValue, asc);
+            else                         return binarySearch(left, mid - 1, searchValue, asc);
+        }
     }
     return false;
 }
@@ -235,8 +237,9 @@ void search(struct arreglos *arreglo){
     cout << "Ingresa un Número a Buscar: \n > ";
     searchValue = leerEntero();
     arreglo->i = 0;
+    bool asc = arreglo->sortedAsc;
     auto start = chrono::high_resolution_clock::now();
-    if(arreglo->binarySearch(0, arreglo->size, searchValue)){
+    if(arreglo->binarySearch(0, arreglo->size - 1, searchValue, asc)){
         cout << "Se encontró el " << searchValue << ". Iteraciones: " << arreglo->i<< ". Posición: " << arreglo->mid + 1<< "\n\n";
     }
     else{
@@ -255,28 +258,20 @@ void removeDuplicates(struct arreglos *arreglo){
     arreglo->dupCounts = new int[arreglo->size];
 
     auto start = chrono::high_resolution_clock::now();
-    for (int i = 0; i < arreglo->size - 1; i++) {
-        if (arreglo->elems[i] != arreglo->elems[i + 1]) {
+    int i = 0;
+    while (i < arreglo->size) {
+        int count = 1;
+        while (i + count < arreglo->size && arreglo->elems[i + count] == arreglo->elems[i])
+            count++;
+        if (count == 1) {
             temp[j++] = arreglo->elems[i];
+        } else {
+            arreglo->dupNums[arreglo->dupSize]   = arreglo->elems[i];
+            arreglo->dupCounts[arreglo->dupSize] = count;
+            arreglo->dupSize++;
         }
-        else {
-            bool found = false;
-            for (int k = 0; k < arreglo->dupSize; k++) {
-                if (arreglo->dupNums[k] == arreglo->elems[i]) {
-                    arreglo->dupCounts[k]++;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                arreglo->dupNums[arreglo->dupSize]   = arreglo->elems[i];
-                arreglo->dupCounts[arreglo->dupSize] = 2;
-                arreglo->dupSize++;
-            }
-        }
+        i += count;
     }
-
-    temp[j++] = arreglo->elems[arreglo->size - 1];
 
     delete[] arreglo->elems;
     arreglo->elems = temp;
