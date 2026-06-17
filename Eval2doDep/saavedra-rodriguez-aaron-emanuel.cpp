@@ -36,15 +36,15 @@ void search             (struct arreglos *arreglo);
 void removeDuplicates   (struct arreglos *arreglo);
 
 struct arreglos{
-    int size = 0, i, mid;
-    int* elems = nullptr;
-    int* dupNums   = nullptr;
-    int* dupCounts = nullptr;
-    int  dupSize   = 0;
-    bool read = 0, sortedAsc = 0, sortedDesc = 0, recorded = 0, sortAsc = 0;
-    bool isEmpty(){return elems == nullptr || size == 0; }
-    bool check(bool condicion, const char* mensaje);
-    bool binarySearch(int left, int right, int searchValue);
+    int size            = 0, i, mid;
+    int* elems          = nullptr;
+    int* dupNums        = nullptr;
+    int* dupCounts      = nullptr;
+    int  dupSize        = 0;
+    bool read           = 0, sortedAsc = 0, sortedDesc = 0, recorded = 0, sortAsc = 0;
+    bool isEmpty()      {return elems == nullptr || size == 0; }
+    bool check          (bool condicion, const char* mensaje);
+    bool binarySearch   (int left, int right, int searchValue);
 };
 bool arreglos::check(bool condicion, const char* mensaje){
     if (condicion) cout << mensaje;
